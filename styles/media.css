@@ -1,0 +1,121 @@
+@media (min-width: 1200px) {
+    .w-xl-250px {
+        width: 250px !important;
+    }
+}
+
+
+@media (min-width: 992px) {
+    .flex-lg-fill {
+        -webkit-box-flex: 1 !important;
+        -ms-flex: 1 1 auto !important;
+        flex: 1 1 auto !important;
+    }
+}
+
+@media (max-width: 1400px) {
+    .content-wrapper {
+
+        padding: 30px 15px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .topbar-wrapper .filet_left_content .input-group {
+        min-width: 200px;
+    }
+
+    .topbar-wrapper .filet_left_content {
+        display: block;
+    }
+
+    .account-wrapper {
+
+
+        min-width: 130px;
+    }
+}
+
+@media (max-width: 991px) {
+    .user_peofile .dropdown-menu.account_info {
+
+        transform: inherit !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .heading_right_content {
+
+        flex-direction: column;
+        align-items: self-start;
+    }
+
+    .heading_right_content .btn_wrapper {
+        margin-top: 15px;
+    }
+
+    .heading_right_content .theme-btn {
+        margin-left: 0;
+    }
+
+    .account-wrapper {
+
+        min-width: 100px;
+    }
+
+    .topbar-wrapper .user-wrapper {
+        padding-left: 23px;
+    }
+
+    .topbar-wrapper .filet_left_content .input-group {
+        min-width: 100px;
+    }
+
+    .avtar_blc {
+        width: 30px;
+        height: 30px;
+
+    }
+
+    .user_peofile .media-body {
+        display: none;
+    }
+
+    .account-wrapper .account-logo-wrapper {
+
+        width: 75px;
+
+    }
+
+    .content-wrapper {
+        padding: 30px 16px 50px 16px;
+    }
+
+    .site_footer {
+        padding: 15px 13px 15px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .copy-text-wrapper {
+        margin-bottom: 4px;
+    }
+
+    .account-wrapper {
+        min-width: 90px !important;
+    }
+
+    .card.nav_pills_card_new {
+        margin-top: 0;
+        margin-left: 0;
+        margin-right: 0;
+
+    }
+
+    .page-wrapper {
+
+        margin-top: 60px;
+
+    }
+}
