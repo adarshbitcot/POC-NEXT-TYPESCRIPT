@@ -15,8 +15,9 @@ import { useDispatch } from "react-redux";
 import { AddNewProducts } from "../store/product_slice";
 import FullLayout from "../layout/FullLayout";
 import { getSession } from "next-auth/react";
-import { wrapper } from "../store/store";
+import { RootStore, wrapper } from "../store/store";
 import { InitialAddProduct, InitialUpdateProduct } from "../types/interfaces";
+import { GetServerSideProps } from "next";
 
 function AddProductPage() {
   //const {data:session,status}=useSession()
@@ -74,6 +75,11 @@ function AddProductPage() {
                   type="text"
                   className="form-control input_modify"
                   placeholder="Search"
+                  onChange={(e)=>{
+                    e.preventDefault()
+                    console.log(e.target.value);
+                    
+                  }}
                 />
               </div>
             </div>
@@ -312,7 +318,7 @@ function AddProductPage() {
                                   className="form-control"
                                   name="category"
                                   id="productName"
-                                  value={values.category}
+                                  value={values.category!}
                                   onChange={handleChange}
                                   onBlur={handleBlur}
                                 >
@@ -343,7 +349,7 @@ function AddProductPage() {
                                   name="status"
                                   onChange={handleChange}
                                   onBlur={handleBlur}
-                                  value={values.status}
+                                  value={values.status!}
                                 >
                                   <option value="">Select</option>
                                   <option value="In stock">In stock</option>
@@ -571,6 +577,11 @@ export const getServerSideProps = wrapper.getServerSideProps(
           destination: "/auth/signin",
         },
       };
+    }
+    return{
+      props: {
+        session,
+      },
     }
   }
 );

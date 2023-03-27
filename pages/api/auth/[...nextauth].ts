@@ -8,10 +8,11 @@ export default NextAuth({
       name: "Credentials",
 
       async authorize(
-        credentials) {
+        credentials:{email:string,password:string,id:string} ) {
         //we need to connect mongodb
         //Then get emails and check validation with credentials
         const { email, password, id } = credentials;
+
         console.log("cred",credentials.id, typeof id);
         
 
@@ -32,7 +33,7 @@ export default NextAuth({
           return null;
         }
       },
-      credentials: undefined
+      credentials: {}
     }),
   ],
   session: {

@@ -10,8 +10,7 @@ import { getSession } from "next-auth/react";
 import { NextRouter, useRouter } from "next/router";
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { NextRequest } from "next/server";
-import { ProductI } from "../../types/interfaces";
+
 
 type Nullable<T> = T | null;
 
@@ -21,7 +20,6 @@ type Variation = {
   stock: string;
   productImage: string;
 };
-
 
 type InitialUpdateProduct = {
   _id: string;
@@ -48,10 +46,8 @@ function UpdateProductPage() {
   const { push } = useRouter();
 
   const product = useSelector((state: RootState) =>
-    getProductById(state, prodId.toString())
+    getProductById(state, prodId!.toString())
   );
-
-  
 
   const [variation, setVariation] = useState<boolean>(false);
   const [loadedProduct, setLoaded] = useState<InitialUpdateProduct>({
@@ -64,12 +60,14 @@ function UpdateProductPage() {
     costPerItem: "",
     taxRate: "",
     status: "In stock",
-    variation: [{
-      variant: "",
-      price: "",
-      stock: "",
-      productImage: "",
-    }],
+    variation: [
+      {
+        variant: "",
+        price: "",
+        stock: "",
+        productImage: "",
+      },
+    ],
   });
 
   // useEffect Work when page reloads
@@ -137,6 +135,11 @@ function UpdateProductPage() {
                   type="text"
                   className="form-control input_modify"
                   placeholder="Search"
+                  onChange={(e)=>{
+                    e.preventDefault();
+                    console.log(e.target.value);
+                    
+                  }}
                 />
               </div>
             </div>
@@ -147,6 +150,7 @@ function UpdateProductPage() {
             validationSchema={ProductValidationSchema}
             onSubmit={async (values, props) => {
               console.log("values", id);
+
               const res = await axios.put(`/api/products/${id}`, values);
               console.log(res);
               if (res.status == 200) {
@@ -444,139 +448,140 @@ function UpdateProductPage() {
                             name="variation"
                             render={({ push, remove, insert }) => (
                               <Fragment>
-                                {Array.isArray(values.variation) && values.variation.map((vari, index) => (
-                                  <Fragment key={index}>
-                                    <div
-                                      className={`${
-                                        index > 0 ? "isMinus" : ""
-                                      }`}
-                                    >
-                                      <div className="row">
-                                        <div className="col-md-4">
-                                          <div className="form-group">
-                                            <label htmlFor=" productName">
-                                              <span className="text-danger">
-                                                *
-                                              </span>{" "}
-                                              Variant
-                                            </label>
-                                            <input
-                                              type="text"
-                                              name={`variation.[${index}].variant`}
-                                              className="form-control"
-                                              id="productName"
-                                              value={
-                                                values?.variation?.[index]
-                                                  ?.variant
-                                              }
-                                              onChange={handleChange}
-                                              onBlur={handleBlur}
-                                            />
-
-                                            {errors?.variation?.[index]
-                                              ?.variant &&
-                                              touched?.variation?.[index]
-                                                ?.variant && (
-                                                <p className="error">
-                                                  {
-                                                    errors?.variation?.[index]
-                                                      .variant
-                                                  }
-                                                </p>
-                                              )}
-                                          </div>
-                                        </div>
-                                        <div className="col-md-4">
-                                          <div className="form-group">
-                                            <label htmlFor=" productName">
-                                              <span className="text-danger">
-                                                *
-                                              </span>{" "}
-                                              Price
-                                            </label>
-                                            <input
-                                              type="text"
-                                              name={`variation.[${index}].price`}
-                                              className="form-control"
-                                              id="productName"
-                                              value={
-                                                values.variation[index].price
-                                              }
-                                              onChange={handleChange}
-                                              onBlur={handleBlur}
-                                            />
-                                            {errors?.variation?.[index]
-                                              ?.price &&
-                                              touched?.variation?.[index]
-                                                ?.price && (
-                                                <p className="error">
-                                                  {
-                                                    errors?.variation?.[index]
-                                                      .price
-                                                  }
-                                                </p>
-                                              )}
-                                          </div>
-                                        </div>
-                                        <div className="col-md-4">
-                                          <div className="form-group">
-                                            <label htmlFor=" productName">
-                                              <span className="text-danger">
-                                                *
-                                              </span>{" "}
-                                              Stock keeping unit
-                                            </label>
-                                            <input
-                                              type="text"
-                                              name={`variation.[${index}].stock`}
-                                              className="form-control"
-                                              id="productName"
-                                              value={
-                                                values.variation[index].stock
-                                              }
-                                              onChange={handleChange}
-                                              onBlur={handleBlur}
-                                            />
-                                            {errors?.variation?.[index]
-                                              ?.stock &&
-                                              touched?.variation?.[index]
-                                                ?.stock && (
-                                                <p className="error">
-                                                  {
-                                                    errors?.variation?.[index]
-                                                      .stock
-                                                  }
-                                                </p>
-                                              )}
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <span
-                                        className="removeSpan"
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          remove(index);
-                                        }}
+                                {Array.isArray(values.variation) &&
+                                  values.variation.map((vari, index) => (
+                                    <Fragment key={index}>
+                                      <div
+                                        className={`${
+                                          index > 0 ? "isMinus" : ""
+                                        }`}
                                       >
-                                        -
-                                      </span>
-                                    </div>
-                                    <div className="form-group uploader-wrapper">
-                                      <label htmlFor="Description">
-                                        <span className="text-danger">*</span>{" "}
-                                        Upload Image
-                                      </label>
-                                      <div className="uploader-wrapper-inner">
-                                        <img
-                                          src="assets/images/thumbnails/picture.svg"
-                                          alt="pictures"
-                                        />
-                                        <input type="file" />
-                                        Click or drag file to upload
+                                        <div className="row">
+                                          <div className="col-md-4">
+                                            <div className="form-group">
+                                              <label htmlFor=" productName">
+                                                <span className="text-danger">
+                                                  *
+                                                </span>{" "}
+                                                Variant
+                                              </label>
+                                              <input
+                                                type="text"
+                                                name={`variation.[${index}].variant`}
+                                                className="form-control"
+                                                id="productName"
+                                                value={
+                                                  values?.variation?.[index]
+                                                    ?.variant
+                                                }
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                              />
+
+                                              {errors?.variation?.[index]
+                                                ?.variant &&
+                                                touched?.variation?.[index]
+                                                  ?.variant && (
+                                                  <p className="error">
+                                                    {
+                                                      errors?.variation?.[index]
+                                                        .variant
+                                                    }
+                                                  </p>
+                                                )}
+                                            </div>
+                                          </div>
+                                          <div className="col-md-4">
+                                            <div className="form-group">
+                                              <label htmlFor=" productName">
+                                                <span className="text-danger">
+                                                  *
+                                                </span>{" "}
+                                                Price
+                                              </label>
+                                              <input
+                                                type="text"
+                                                name={`variation.[${index}].price`}
+                                                className="form-control"
+                                                id="productName"
+                                                value={
+                                                  values.variation[index].price
+                                                }
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                              />
+                                              {errors?.variation?.[index]
+                                                ?.price &&
+                                                touched?.variation?.[index]
+                                                  ?.price && (
+                                                  <p className="error">
+                                                    {
+                                                      errors?.variation?.[index]
+                                                        .price
+                                                    }
+                                                  </p>
+                                                )}
+                                            </div>
+                                          </div>
+                                          <div className="col-md-4">
+                                            <div className="form-group">
+                                              <label htmlFor=" productName">
+                                                <span className="text-danger">
+                                                  *
+                                                </span>{" "}
+                                                Stock keeping unit
+                                              </label>
+                                              <input
+                                                type="text"
+                                                name={`variation.[${index}].stock`}
+                                                className="form-control"
+                                                id="productName"
+                                                value={
+                                                  values.variation[index].stock
+                                                }
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                              />
+                                              {errors?.variation?.[index]
+                                                ?.stock &&
+                                                touched?.variation?.[index]
+                                                  ?.stock && (
+                                                  <p className="error">
+                                                    {
+                                                      errors?.variation?.[index]
+                                                        .stock
+                                                    }
+                                                  </p>
+                                                )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <span
+                                          className="removeSpan"
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            remove(index);
+                                          }}
+                                        >
+                                          -
+                                        </span>
                                       </div>
-                                    </div>
-                                  </Fragment>
-                                ))}
+                                      <div className="form-group uploader-wrapper">
+                                        <label htmlFor="Description">
+                                          <span className="text-danger">*</span>{" "}
+                                          Upload Image
+                                        </label>
+                                        <div className="uploader-wrapper-inner">
+                                          <img
+                                            src="assets/images/thumbnails/picture.svg"
+                                            alt="pictures"
+                                          />
+                                          <input type="file" />
+                                          Click or drag file to upload
+                                        </div>
+                                      </div>
+                                    </Fragment>
+                                  ))}
 
                                 <button
                                   className="uploader-add-btne"
@@ -587,7 +592,7 @@ function UpdateProductPage() {
                                       variant: "",
                                       price: "",
                                       stock: "",
-                                      productImage: "",
+                                      productImage: "/images/products/cycle.jpg",
                                     });
                                   }}
                                 >
@@ -626,6 +631,12 @@ export const getServerSideProps = wrapper.getServerSideProps(
         },
       };
     }
+
+    return {
+      props: {
+        session,
+      },
+    };
   }
 );
 

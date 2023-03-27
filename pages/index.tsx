@@ -44,6 +44,10 @@ function ProductPage(props:unknown) {
           <select
             className="custom-select input_modify"
             value={""}
+            onChange={(e) => {
+              e.preventDefault()
+              console.log(e.target.value)
+            }}
             // onChange={(e) => {
             //   e.preventDefault();
             //   setCatogery(e.target.value);
@@ -53,7 +57,7 @@ function ProductPage(props:unknown) {
             //   );
             // }}
           >
-            <option selected value={""}>
+            <option  defaultValue={"clothe"}>
               All
             </option>
             <option value="clothe">Clothe</option>

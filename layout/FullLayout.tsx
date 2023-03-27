@@ -50,6 +50,9 @@ function FullLayout({ children }: { children: ReactNode }) {
                   type="text"
                   className="form-control input_modify"
                   placeholder="Search"
+                  onChange={(e)=>{
+                    console.log(e.target.value);
+                  }}
                 />
               </div>
             </div>
