@@ -5,9 +5,9 @@ import FullLayout from "../../layout/FullLayout";
 import { getProductById } from "../../store/product_slice";
 import { RootState, wrapper } from "../../store/store";
 import axios from "axios";
-import { Formik, Form, FieldArray, ErrorMessage, FormikErrors } from "formik";
+import { Formik, Form, FieldArray, ErrorMessage } from "formik";
 import { getSession } from "next-auth/react";
-import { NextRouter, useRouter } from "next/router";
+import {  useRouter } from "next/router";
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 

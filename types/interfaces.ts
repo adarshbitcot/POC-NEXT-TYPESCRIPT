@@ -4,8 +4,8 @@ import {
   SignUpValidationSchema,
 } from "../helper/form_validation";
 import * as yup from "yup";
-import { AxiosError, AxiosResponse } from "axios";
-import { FormikErrors, FormikValues } from "formik";
+import { AxiosError } from "axios";
+
 
 // export interface ErrorResponse extends AxiosResponse {
 //   status: number;

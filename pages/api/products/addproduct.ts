@@ -11,7 +11,7 @@ async function handler(req:NextApiRequest, res:NextApiResponse) {
     const data = req.body;
     console.log(data);
     productModel.create(data).then((data) => {
-      return res.status(200).json({ message: "Product Added Success Fully" });
+      return res.status(200).json({ message: "Product Added Success Fully",data });
     });
 
     //if(add_product) res.status(200).json({message:"Product Added Success Fully"})

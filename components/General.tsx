@@ -1,6 +1,8 @@
 import React from "react";
 
-function ChangeGeneral(props:{state:boolean,changeVariant:any}) {
+type ChangeVariantFn=()=>void
+
+function ChangeGeneral(props:{state:boolean,changeVariant:ChangeVariantFn}) {
   return (
     <ul
       className="nav nav-pills mb-0 nav_pills_wrapper"

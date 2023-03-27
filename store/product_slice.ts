@@ -1,14 +1,8 @@
 
-import { AnyAction, createSlice } from "@reduxjs/toolkit";
+import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import { InitialUpdateProduct, ProductI } from "../types/interfaces";
 import { RootState } from "./store";
-
-const initialState:Initial = {
-  products: [],
-  productLength: 0,
-  currentPage: 1,
-};
 
 type Initial={
   products: Array<InitialUpdateProduct>
@@ -16,15 +10,42 @@ type Initial={
   currentPage: number
 }
 
+type ProductRes=Array<InitialUpdateProduct>
+
+type CurrentPageRes={
+  currentPage: number
+}
+
+type AddProductRes=Omit<InitialUpdateProduct,"price" |"_id"|"costPerItem"|"taxRate"|"comparePrice">
+
+type FilterProductRes={
+  products: Array<InitialUpdateProduct>,
+  productLength: number,
+}
+
+const initialState:Initial = {
+  products: [],
+  productLength: 0,
+  currentPage: 1,
+};
+
+
+
+
+
 export const ProductSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    AddProducts: (state:Initial, action:AnyAction) => {
+    AddProducts: (state:Initial, action:PayloadAction<ProductRes>) => {
       state.products = action.payload;
     },
     AddProductLength: (state, action) => {
       state.productLength = action.payload;
+    },
+    _FilterProducts:(state,action:PayloadAction<FilterProductRes>)=>{
+      state.products = action.payload.products,
+      state.productLength=action.payload.productLength
     },
 
     // SelectProducts: (state, { payload: id, prevId }) => {
@@ -58,7 +79,7 @@ export const ProductSlice = createSlice({
     //   //then Map the Product With State
     // },
 
-    SetCurrentPage: (state, action) => {
+    SetCurrentPage: (state, action:PayloadAction<number>) => {
       if(state.currentPage !== action.payload){
         state.currentPage = action.payload;
       }
@@ -66,11 +87,11 @@ export const ProductSlice = createSlice({
     },
 
     updateProducts: (state, action) => {},
-    AddNewProducts:(state,action)=>{
+    AddNewProducts:(state,action:PayloadAction<InitialUpdateProduct>)=>{
       state.products.pop()
       state.products.unshift(action.payload)
     },
-    deleteProducts: (state, action) => {
+    deleteProducts: (state, action:PayloadAction<string>) => {
       state.products=state.products.filter((data,index)=>data._id !== action.payload)
       state.productLength=state.productLength-1
     },
@@ -94,7 +115,8 @@ export const {
   AddProductLength,
   SetCurrentPage,
   deleteProducts,
-  AddNewProducts
+  AddNewProducts,
+  _FilterProducts
 } = ProductSlice.actions;
 export const getAllProducts = (state:RootState) => state.products.products;
 export const getProductById = (state:RootState, id:string) =>

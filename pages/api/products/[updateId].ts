@@ -1,17 +1,11 @@
 import { CONNECT_DB } from "../../../helper/db";
-import  productModel, { ProductSchema } from '../../../model/productSchema'
-import { NextApiRequest,NextApiResponse } from "next";
-import { ProductI } from "../../../types/interfaces";
+import productModel from "../../../model/productSchema";
+import { NextApiRequest, NextApiResponse } from "next";
 
-type Res={
-
-}
-
-
-async function handler(req:NextApiRequest, res:NextApiResponse){
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   CONNECT_DB();
   const { updateId } = req.query;
-  
+
   if (req.method == "PUT") {
     //get data from body
     //update product
@@ -23,11 +17,12 @@ async function handler(req:NextApiRequest, res:NextApiResponse){
   }
 
   if (req.method == "GET") {
-    const product = await productModel.findById( updateId );
+    const product = await productModel.findById(updateId);
     if (product) {
       return res.status(200).json({ message: "Fetch Product", product });
     }
-    if(product==null) return res.status(400).json({message:"Not get Product"})
+    if (product == null)
+      return res.status(400).json({ message: "Not get Product" });
   }
 
   if (req.method == "DELETE") {

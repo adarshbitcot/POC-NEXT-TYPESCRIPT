@@ -1,6 +1,6 @@
 import productSchema from "../../../model/productSchema";
 import { NextApiRequest, NextApiResponse } from "next";
-import { string } from "yup";
+
 
 function CastToNumber(x: any): number {
   let convertedX = Number(x);

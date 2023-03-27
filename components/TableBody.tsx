@@ -8,9 +8,9 @@ import axios from "axios";
 import Link from "next/link";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { InitialUpdateProduct, Product, ProductI } from "../types/interfaces";
-import { ObjectId } from "mongoose";
+import { InitialUpdateProduct } from "../types/interfaces";
 import { RootState } from "../store/store";
+import Swal from 'sweetalert2';
 
 function TableBody(props:unknown) {
   const redux_products:InitialUpdateProduct[] = useSelector((state:RootState) => getAllProducts(state));
@@ -108,19 +108,47 @@ function TableBody(props:unknown) {
                       className="dropdown-item"
                       onClick={(e) => {
                         e.preventDefault();
-                        const isDeleted = window.confirm(
-                          " Are You Want To delete This Prduct"
-                        );
-                        if (isDeleted) {
-                          axios({
-                            method: "DELETE",
-                            url: `/api/products/${product._id}`,
-                          }).then((res) => {
-                            if (res.status == 200) {
-                              dispatch(deleteProducts(product._id));
-                            }
-                          });
-                        }
+                        Swal.fire({
+                          title: 'Are you sure?',
+                          text: "You won't be able to revert this!",
+                          icon: 'warning',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Yes, delete it!'
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            axios({
+                              method: "DELETE",
+                              url: `/api/products/${product._id}`,
+                            }).then((res) => {
+                              if (res.status == 200) {
+                                dispatch(deleteProducts(product._id));
+                                Swal.fire(
+                                  'Deleted!',
+                                  'Your file has been deleted.',
+                                  'success'
+                                )
+                              }
+                            });
+                            
+                            
+                            
+                          }
+                        })
+                        // const isDeleted = window.confirm(
+                        //   " Are You Want To delete This Prduct"
+                        // );
+                        // if (isDeleted) {
+                          // axios({
+                          //   method: "DELETE",
+                          //   url: `/api/products/${product._id}`,
+                          // }).then((res) => {
+                          //   if (res.status == 200) {
+                          //     dispatch(deleteProducts(product._id));
+                          //   }
+                          // });
+                        // }
                         return;
                       }}
                     >

@@ -1,15 +1,69 @@
-import { Fragment, ReactElement } from "react";
+import { Fragment, ReactElement, useState } from "react";
 import { getSession } from "next-auth/react";
 import FullLayout from "../layout/FullLayout";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import TableHeader from "../components/THead";
 import TableBody from "../components/TableBody";
 import Link from "next/link";
 import { wrapper } from "../store/store";
-import { AddProductLength, AddProducts } from "../store/product_slice";
+import { AddProductLength, AddProducts,_FilterProducts } from "../store/product_slice";
 import Pagination from "../components/Pagination";
-import { ProductI } from "../types/interfaces";
-function ProductPage(props:unknown) {
+import { useDispatch } from "react-redux";
+
+
+
+
+
+
+
+
+function ProductPage(props: unknown) {
+  const dispatch = useDispatch();
+  const [filter, setFilter] = useState<string>("");
+
+  const FilterProducts = async (catogery) => {
+
+    //if catogery ==""
+    try {
+      if(catogery === ""){
+        const {
+          data: { products },
+        } = await axios.get("http://localhost:3000/api/products/");
+    
+        console.log("productsess", products);
+        if (products.length > 0) {
+          dispatch(AddProducts(products));
+          dispatch(AddProductLength(products.length));
+        }
+      }
+      
+    } catch (error) {
+       console.log(error);
+       
+    }
+
+    //if catogery !== ""
+    try {
+      let data:{catogery:string}={
+        catogery: catogery,
+      }
+      
+      const res = await axios.post("/api/products/filter",{
+        data:data
+      });
+
+      console.log(res);
+
+      
+
+      if (res.status == 200) {
+        //add to redux
+        dispatch(_FilterProducts({products:res.data.product,productLength:res.data.productLength}));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //console.log(props.products);
   return (
     <Fragment>
@@ -43,10 +97,16 @@ function ProductPage(props:unknown) {
           </div>
           <select
             className="custom-select input_modify"
-            value={""}
+            value={filter}
             onChange={(e) => {
-              e.preventDefault()
-              console.log(e.target.value)
+              e.preventDefault();
+              setFilter(e.target.value);
+              //filter api
+
+              //get reponse
+
+              //added to redux
+              FilterProducts(e.target.value);
             }}
             // onChange={(e) => {
             //   e.preventDefault();
@@ -57,9 +117,7 @@ function ProductPage(props:unknown) {
             //   );
             // }}
           >
-            <option  defaultValue={"clothe"}>
-              All
-            </option>
+            <option value={""}>All</option>
             <option value="clothe">Clothe</option>
             <option value="bags">Bags</option>
             <option value="Shoes">Shoes</option>
@@ -68,21 +126,24 @@ function ProductPage(props:unknown) {
           </select>
         </div>
         <div className="filter_btn_wrapper">
-          <Link href={"/addproduct"} className="btn theme-btn-primary theme-btn">
+          <Link
+            href={"/addproduct"}
+            className="btn theme-btn-primary theme-btn"
+          >
             Add Product
           </Link>
         </div>
       </div>
 
       <TableHeader>
-        <TableBody  />
+        <TableBody />
       </TableHeader>
       <Pagination />
     </Fragment>
   );
 }
 
-ProductPage.getLayout = function getLayout(page:ReactElement) {
+ProductPage.getLayout = function getLayout(page: ReactElement) {
   return <FullLayout>{page}</FullLayout>;
 };
 
@@ -92,7 +153,7 @@ ProductPage.getLayout = function getLayout(page:ReactElement) {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {
-    const session = await getSession  ({ req: context.req });
+    const session = await getSession({ req: context.req });
 
     if (session == null) {
       return {
@@ -106,8 +167,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
     const {
       data: { products },
     } = await axios.get("http://localhost:3000/api/products/");
-    
-    console.log("productsess",products);
+
+    console.log("productsess", products);
     if (products.length > 0) {
       store.dispatch(AddProducts(products));
       store.dispatch(AddProductLength(products.length));
@@ -116,7 +177,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     return {
       props: {
         session,
-        products:JSON.stringify(products)
+        products: JSON.stringify(products),
       },
     };
   }

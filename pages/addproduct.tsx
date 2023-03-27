@@ -9,19 +9,20 @@ import {
   FieldArray,
   ErrorMessage,
 } from "formik";
-import React, { Fragment, ReactElement, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { AddNewProducts } from "../store/product_slice";
 import FullLayout from "../layout/FullLayout";
 import { getSession } from "next-auth/react";
-import { RootStore, wrapper } from "../store/store";
-import { InitialAddProduct, InitialUpdateProduct } from "../types/interfaces";
-import { GetServerSideProps } from "next";
+import { wrapper } from "../store/store";
+import { InitialAddProduct } from "../types/interfaces";
+
 
 function AddProductPage() {
   //const {data:session,status}=useSession()
   const [variation, setVariation] = useState(false);
+  const [filter,setFilter]=useState<string>("")
   const { push } = useRouter();
   const dispatch = useDispatch();
 
@@ -101,7 +102,7 @@ function AddProductPage() {
                 .then((res) => {
                   console.log(res);
                   if (res.status == 200) {
-                    dispatch(AddNewProducts(otherValue));
+                    dispatch(AddNewProducts(res.data.data));
                     return push("/");
                   }
                 })
